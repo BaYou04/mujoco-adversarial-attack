@@ -22,22 +22,22 @@ USER_CONFIG = {
     "fig4_epsilon": 0.05,          
     "target_dim": 5,               
     
-    "fig2_selected_dims": list(range(10)), 
+    "fig2_selected_dims": list(range(17)), 
     
     "device": "cuda" if torch.cuda.is_available() else "cpu",
     
     "atn_model_path": "./atn_halfcheetah_model/atn_halfcheetah_model.pth",
-    "target_model_path": "./model/halfcheetah-v5-TQC.zip",
+    "target_model_path": "./model/halfcheetah-v5-SAC.zip",
     
     # 🌟 将影子模型严格拆分为两组
     "shadow_paths_pgd": [
-        "translearning/model/shadow_hc_TQC_model_200K.pth",
-        "translearning/model/shadow_hc_TQC_model_500K.pth",
-        "translearning/model/shadow_hc_TQC_model_1000K.pth"
+        "translearning/model/shadow_hc_SAC_model_200K.pth",
+        "translearning/model/shadow_hc_SAC_model_500K.pth",
+        "translearning/model/shadow_hc_SAC_model_1000K.pth"
     ],
     "shadow_paths_atn": [
-        "translearning/model/shadow_hc_TQC_model_50K.pth",
-        "translearning/model/shadow_hc_TQC_model_200K.pth"
+        "translearning/model/shadow_hc_SAC_model_50K.pth",
+        "translearning/model/shadow_hc_SAC_model_200K.pth"
     ]
 }
 
@@ -259,7 +259,7 @@ def plot_combined_figures(micro, macro, cfg, atn_model, target_model, device):
     epsilon = cfg['epsilon']
     env_id = cfg['env_id']
     target_dim = cfg['target_dim']
-    save_dir = "./obs_analysis_combined_figs"
+    save_dir = "./obs_analysis_combined_figs SAC"
     os.makedirs(save_dir, exist_ok=True)
     sns.set_theme(style="whitegrid", context="paper", font_scale=1.2)
     

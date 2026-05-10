@@ -17,20 +17,20 @@ from stable_baselines3 import SAC
 # ===================== [1. 路径与参数配置] =====================
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 ENV_NAME = "Humanoid-v5"
-EXPERT_PATH = "model/humanoid-v5-TQC.zip"
+EXPERT_PATH = "model/humanoid-v5-SAC.zip"
 
 # 影子模型路径
 SHADOW_PATHS = {
-    "50K":   "translearning/model/shadow_humanoid_TQC_model_50K.pth",
-    "200K":  "translearning/model/shadow_humanoid_TQC_model_200K.pth",
-    "500K":  "translearning/model/shadow_humanoid_TQC_model_500K.pth"
+    "50K":   "translearning/model/shadow_humanoid_SAC_model_50K.pth",
+    "200K":  "translearning/model/shadow_humanoid_SAC_model_200K.pth",
+    "500K":  "translearning/model/shadow_humanoid_SAC_model_500K.pth"
 }
 
-EXPERIMENT_NAME = "BB_MI_PGD_TQC_Humanoid"
-N_EPISODES = 30       # 每组 Epsilon 测试 30 次以获得稳定的置信区间
+EXPERIMENT_NAME = "BB_MI_PGD_SAC_Humanoid 3"
+N_EPISODES = 3       # 每组 Epsilon 测试 30 次以获得稳定的置信区间
 EPSILON_LIST = [0.00, 0.010, 0.012, 0.015, 0.018, 0.02, 0.023, 0.025, 0.027, 0.03, 0.035, 0.05]
 PGD_ITER = 10         # 迭代次数
-VIDEO_FOLDER = "./bb_mi_tqc_pgd_videos"
+VIDEO_FOLDER = "./bb_mi_sac_pgd_videos 3"
 
 # ===================== [2. 影子模型架构] =====================
 class SubstituteModel(nn.Module):
@@ -45,7 +45,7 @@ class SubstituteModel(nn.Module):
 
 # ===================== [3. MI-PGD 集成攻击核心类] =====================
 class EnsemblePGDAttacker:
-    def __init__(self, shadow_models, epsilon=0, n_iter=10, mu=1.0):
+    def __init__(self, shadow_models, epsilon=0, n_iter=10, mu=0.9):
         self.models = shadow_models
         self.epsilon = epsilon
         self.n_iter = n_iter
@@ -126,7 +126,7 @@ def run_experiment():
     if not os.path.exists(EXPERT_PATH):
         print(f"❌ 错误: 找不到专家模型 {EXPERT_PATH}")
         return
-    expert = TQC.load(EXPERT_PATH, device=DEVICE)
+    expert = SAC.load(EXPERT_PATH, device=DEVICE)
     
     env_temp = gym.make(ENV_NAME)
     s_dim = env_temp.observation_space.shape[0]
